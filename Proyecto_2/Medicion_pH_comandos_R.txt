@@ -1,0 +1,47 @@
+
+Anova <- aov(Ganancia ~ `f_in factor (Hz)` * `Vin factor (pk)` * `Offset factor`, data=mediciones_proyecto_2)
+
+summary(Anova)
+
+AnovaCD <- aov(`CD out` ~ `f_in factor (Hz)` * `Vin factor (pk)` * `Offset factor`, data=mediciones_proyecto_2)
+
+summary(AnovaCD)
+
+******************************************* Gráfico de Bode para cada Vin: *******************************************
+
+datos_prom <- aggregate(Ganancia ~ `f_in factor (Hz)` + `Vin factor (pk)`, data = mediciones_proyecto_2, FUN = mean)
+library(ggplot2)
+ggplot(datos_prom, aes(x = `f_in factor (Hz)`, y = Ganancia, color = factor(`Vin factor (pk)`))) +  geom_line() +
+  geom_point() +
+  scale_x_log10() +
+  labs(title = "Gráfico de Bode por Vin",
+       x = "Frecuencia (Hz)",
+       y = "Ganancia",
+       color = "Vin (pk)") +
+  theme_minimal()
+
+
+*********************************** CD out por frecuencia y Vin
+
+datos_prom <- aggregate(`CD out` ~ `f_in factor (Hz)` + `Vin factor (pk)`, data = mediciones_proyecto_2, FUN = mean)
+library(ggplot2)
+ggplot(datos_prom, aes(x = `f_in factor (Hz)`, y = `CD out`, color = factor(`Vin factor (pk)`))) +  geom_line() +
+  geom_point() +
+  scale_x_log10() +
+  labs(title = "Salida CD por frecuencia y Vin",
+       x = "Frecuencia (Hz)",
+       y = "Salida CD (V)",
+       color = "Vin (pk)") +
+  theme_minimal()
+
+
+*********************************** CD out por voltaje de electrodo (Offset)
+
+datos_prom <- aggregate(`CD out` ~ `Offset factor`, data = mediciones_proyecto_2, FUN = mean)
+library(ggplot2)
+ggplot(datos_prom, aes(x = `Offset factor`, y = `CD out`)) +  geom_line() +
+  geom_point() +
+  labs(title = "Salida CD por offset de entrada",
+       x = "Offset (V)",
+       y = "Salida CD (V)") +
+  theme_minimal()
